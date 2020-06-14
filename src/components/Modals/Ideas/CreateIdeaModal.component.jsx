@@ -10,12 +10,12 @@ const CreateIdeaModal = ({ visible, toggleModal, history }) => {
     const [form] = Form.useForm()
 
     const createIdea = () => {
-        console.log(form.getFieldsValue())
         form.validateFields()
             .then(async values => {
                 try {
                     await axios.post('/ideas', { 
                         title: values.title,
+                        description: values.description,
                         ...(!isNil(values.examples) && { examples: values.examples})
                     })
                     toggleModal()
@@ -56,6 +56,17 @@ const CreateIdeaModal = ({ visible, toggleModal, history }) => {
                         { required: true, message: 'Title is required' }
                     ]}>
                     <Input placeholder="Title of idea" />
+                </Form.Item>
+                <Form.Item
+                    validateTrigger="onSubmit"
+                    name="description"
+                    label="Description"
+                    rules={[
+                        { required: true, message: 'Description is required' },
+                        { min: 10, message: 'A minimum of 10 characters is required' },
+                        { max: 250, message: 'A maximum of 250 characters is allowed'}
+                    ]}>
+                    <Input.TextArea placeholder="Description of idea" />
                 </Form.Item>
                 <Form.List
                     label="Examples"

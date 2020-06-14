@@ -6,6 +6,7 @@ import moment from 'moment'
 
 import MainLayout from '../components/Layouts/MainLayout.component'
 import PageNavigation from '../components/Navigation/PageNavigation.component'
+import { IDEA_STATUSES } from '../constants'
 import axios from '../config/axios'
 
 const Proposals = () => {
@@ -16,7 +17,7 @@ const Proposals = () => {
         (async () => {
             setIsLoading(true)
             try {
-                const proposalsData = await axios.get('/ideas/proposals')
+                const proposalsData = await axios.get('/ideas', { params: { filterBy: { status: IDEA_STATUSES.PENDING } } })
                 setProposalsData(proposalsData)
             } catch (error) {
                 message.error(error.message)
@@ -41,14 +42,21 @@ const Proposals = () => {
             title: 'Examples',
             dataIndex: 'examples',
             key: 'examples',
-            render: (text, record) => <span></span>
+            render: examples => {
+                if (isEmpty(examples)) return '-'
+
+                return examples.map((example, index) => [
+                    index > 0 && ", ",
+                    <a key={index + '-' + example.title} target='_blank' rel="noopener noreferrer" href={example.url}>{example.title}</a>
+                ])
+            }
         }
     ]
 
     return (
         <MainLayout>
             <PageNavigation title="Proposals" />
-            <Table 
+            <Table
                 loading={isLoading}
                 rowKey={record => record._id}
                 dataSource={!isEmpty(proposalsData) && proposalsData.data.results}

@@ -5,3 +5,9 @@ export const ROUTES = {
     PROPOSALS: '/proposals',
     IDEAS: '/ideas'
 }
+
+export const IDEA_STATUSES = {
+    ACCEPTED: 'ACCEPTED',
+    PENDING: 'PENDING',
+    DECLINED: 'DECLINED'
+}

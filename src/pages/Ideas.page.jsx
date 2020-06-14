@@ -9,6 +9,7 @@ import moment from 'moment'
 import MainLayout from '../components/Layouts/MainLayout.component'
 import PageNavigation from '../components/Navigation/PageNavigation.component'
 import CreateIdeaModal from '../components/Modals/Ideas/CreateIdeaModal.component'
+import { IDEA_STATUSES } from '../constants'
 import axios from '../config/axios'
 
 const Ideas = () => {
@@ -20,7 +21,7 @@ const Ideas = () => {
         (async () => {
             setIsLoading(true)
             try {
-                const ideasData = await axios.get('/ideas')
+                const ideasData = await axios.get('/ideas', { params: { filterBy: { status: IDEA_STATUSES.ACCEPTED } } })
                 setIdeasData(ideasData)
             } catch (error) {
                 message.error(error.message)
@@ -58,7 +59,7 @@ const Ideas = () => {
 
     return (
         <MainLayout>
-            <CreateIdeaModal 
+            <CreateIdeaModal
                 visible={showCreateIdeaModal}
                 toggleModal={() => setShowCreateIdeaModal(!showCreateIdeaModal)} />
             <PageNavigation
